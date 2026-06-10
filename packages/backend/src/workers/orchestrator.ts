@@ -5,7 +5,8 @@ import { DirectorAgent } from '@vibestudio/agents-director';
 import { generateMechanics } from '@vibestudio/agents-mechanics';
 import { generateAssets } from '@vibestudio/agents-asset';
 import { generateAudio } from '@vibestudio/agents-audio';
-import { assembleProject } from '@vibestudio/build-system';
+import { assembleProject, runInstall, runBuild, startDevServer } from '@vibestudio/build-system';
+import { runVerification } from '@vibestudio/runtime-verifier';
 import path from 'path';
 
 export const orchestratorWorker = new Worker(
@@ -79,6 +80,40 @@ export const orchestratorWorker = new Worker(
         assetsCode: assets.assetsCode,
         audioCode: audio.audioCode,
       });
+
+      // Build & Install
+      await log('info', 'Installing dependencies');
+      const installRes = runInstall(outputDir);
+      if (!installRes.success) throw new Error('pnpm install failed: ' + installRes.stderr);
+
+      await log('info', 'Building generated project');
+      const buildRes = runBuild(outputDir);
+      if (!buildRes.success) throw new Error('pnpm build failed: ' + buildRes.stderr);
+
+      // Phase 4: Runtime Verification
+      await updatePhase('verification', 75);
+      await log('info', 'Starting Dev Server for verification');
+      
+      const port = 8080 + Math.floor(Math.random() * 1000); // randomize port to avoid conflicts
+      const devServer = startDevServer(outputDir, port);
+      
+      // Wait a moment for server to boot
+      await new Promise(r => setTimeout(r, 2000));
+
+      await log('info', 'Running Playwright Telemetry Verification');
+      const telemetry = await runVerification({ url: devServer.url });
+      
+      devServer.kill();
+
+      if (!telemetry.success) {
+        await log('error', `Verification failed with ${telemetry.errors.length} errors. First error: ${telemetry.errors[0].message}`);
+        
+        // TODO: Pass telemetry to Debugger Agent (Phase 5)
+        // For now, we just fail the build.
+        throw new Error('Runtime Verification failed. Check logs.');
+      } else {
+        await log('info', `Verification passed! Screenshots and telemetry captured.`);
+      }
 
       // Complete
       await updatePhase('completed', 100);
