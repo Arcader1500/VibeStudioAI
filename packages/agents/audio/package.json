@@ -1,0 +1,11 @@
+{
+  "name": "@vibestudio/agent-audio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VibeStudio AI — Audio Agent (procedural music and SFX via Web Audio API)",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  }
+}
