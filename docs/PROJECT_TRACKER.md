@@ -69,16 +69,16 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1B.1 | Scaffold Vite + React + TS project | ⬜ Todo | `pnpm create vite` |
-| 1B.2 | Configure TailwindCSS | ⬜ Todo | — |
-| 1B.3 | Set up Zustand store structure | ⬜ Todo | — |
-| 1B.4 | Build prompt submission UI | ⬜ Todo | FR-1 |
-| 1B.5 | Build interactive clarification modal | ⬜ Todo | FR-2 |
-| 1B.6 | Build live build progress visualization | ⬜ Todo | FR-1 |
-| 1B.7 | Build game preview iframe/panel | ⬜ Todo | — |
-| 1B.8 | Build source code download UI | ⬜ Todo | FR-12 |
-| 1B.9 | Connect to backend via REST + WebSocket | ⬜ Todo | — |
-| 1B.10 | Responsive layout + accessibility pass | ⬜ Todo | — |
+| 1B.1 | Scaffold Vite + React + TS project | ✅ Done | Manual scaffold (Vite interactive blocked) |
+| 1B.2 | Configure TailwindCSS | ✅ Done | tailwind.config.js + postcss.config.js |
+| 1B.3 | Set up Zustand store structure | ✅ Done | src/store/projectStore.ts |
+| 1B.4 | Build prompt submission UI | ✅ Done | FR-1 — PromptInput.tsx |
+| 1B.5 | Build interactive clarification modal | ✅ Done | FR-2 — ClarificationModal.tsx |
+| 1B.6 | Build live build progress visualization | ✅ Done | BuildProgress.tsx with phase pipeline |
+| 1B.7 | Build game preview iframe/panel | ✅ Done | GamePreview.tsx |
+| 1B.8 | Build source code download UI | ✅ Done | FR-12 — download/open/view-source in GamePreview |
+| 1B.9 | Connect to backend via REST + WebSocket | ✅ Done | src/api/client.ts |
+| 1B.10 | Responsive layout + accessibility pass | ✅ Done | unique IDs, aria-label on all interactive elements |
 
 ### 1C. Backend Scaffold (`packages/backend`)
 
@@ -125,15 +125,15 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1E.1 | Set up Antigravity SDK agent scaffold | ⬜ Todo | §7.2 |
-| 1E.2 | Generate `src/game/game.js` (Phaser config) | ⬜ Todo | FR-5 |
-| 1E.3 | Generate `src/game/scenes/*` (scene files) | ⬜ Todo | FR-5 |
-| 1E.4 | Generate `src/game/entities/*` (player, enemy, ui) | ⬜ Todo | FR-5, §7.2 |
-| 1E.5 | Implement game loop generation | ⬜ Todo | FR-5 |
-| 1E.6 | Implement physics generation | ⬜ Todo | FR-5 |
-| 1E.7 | Implement combat system generation | ⬜ Todo | FR-5 |
-| 1E.8 | Implement input handling generation | ⬜ Todo | FR-5 |
-| 1E.9 | Win/loss condition code generation | ⬜ Todo | FR-3 |
+| 1E.1 | Set up Antigravity SDK agent scaffold | ✅ Done | Core generator written |
+| 1E.2 | Generate `src/game/game.js` (Phaser config) | ✅ Done | FR-5 — generateGameConfig() |
+| 1E.3 | Generate `src/game/scenes/*` (scene files) | ✅ Done | FR-5 — 5 scenes (Boot/Preload/Menu/Game/GameOver) |
+| 1E.4 | Generate `src/game/entities/*` (player, enemy, ui) | ✅ Done | FR-5, §7.2 — Player, Enemy, UI |
+| 1E.5 | Implement game loop generation | ✅ Done | FR-5 — GameScene.update() |
+| 1E.6 | Implement physics generation | ✅ Done | FR-5 — Arcade physics, gravity per camera type |
+| 1E.7 | Implement combat system generation | ✅ Done | FR-5 — bullets, collisions, hit detection |
+| 1E.8 | Implement input handling generation | ✅ Done | FR-5 — WASD+arrows, space fire, mouse aim |
+| 1E.9 | Win/loss condition code generation | ✅ Done | FR-3 — wave complete, lives=0 game over |
 
 ### 1F. Build System (`packages/build-system`)
 
@@ -142,12 +142,12 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1F.1 | Scaffold Vite project creator utility | ⬜ Todo | FR-8 |
-| 1F.2 | Assemble generated modules into project | ⬜ Todo | FR-8 |
-| 1F.3 | Install dependencies via `pnpm install` | ⬜ Todo | FR-9 |
-| 1F.4 | Run `pnpm build` and capture output | ⬜ Todo | FR-9 |
-| 1F.5 | Start `pnpm dev` server | ⬜ Todo | FR-10 |
-| 1F.6 | Generate export zip package | ⬜ Todo | FR-12 |
+| 1F.1 | Scaffold Vite project creator utility | ✅ Done | FR-8 — assembler.ts: buildViteConfig() |
+| 1F.2 | Assemble generated modules into project | ✅ Done | FR-8 — assembleProject() writes full tree |
+| 1F.3 | Install dependencies via `pnpm install` | ✅ Done | FR-9 — runner.ts: runInstall() |
+| 1F.4 | Run `pnpm build` and capture output | ✅ Done | FR-9 — runner.ts: runBuild() |
+| 1F.5 | Start `pnpm dev` server | ✅ Done | FR-10 — runner.ts: startDevServer() |
+| 1F.6 | Generate export zip package | ⬜ Todo | FR-12 — planned |
 
 ---
 
