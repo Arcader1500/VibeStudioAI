@@ -1,0 +1,75 @@
+# Node.js / TypeScript Mono-Repo .gitignore
+
+# Dependencies
+node_modules/
+.pnpm-store/
+.yarn/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.vite/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+*.snap
+
+# Generated game projects (runtime build artifacts)
+generated-games/
+game-output/
+builds/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / Editor
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.history/
+
+# PostgreSQL
+*.sql.bak
+pgdata/
+
+# pnpm lock (committed intentionally, but exclude local patches)
+.pnpmfile.cjs
+
+# Playwright
+/test-results/
+/playwright/.cache/
+
+# Temporary
+tmp/
+temp/
+.tmp/
