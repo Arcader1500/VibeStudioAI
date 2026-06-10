@@ -206,7 +206,7 @@ main                    ← stable, production-ready releases
 | 4.7 | WebGL error capture | ✅ Done | WebGL string detection in console logs |
 | 4.8 | Screenshot capture | ✅ Done | `page.screenshot()` to base64 |
 | 4.9 | Telemetry report generation | ✅ Done | Returns `TelemetryReport` object |
-| 4.10 | Trigger Debugger Agent on failure | ⬜ Todo | Wired to Orchestrator (fails build pending Phase 5) |
+| 4.10 | Trigger Debugger Agent on failure | ✅ Done | Wired in Orchestrator `while` loop |
 
 ---
 
@@ -218,16 +218,16 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 5.1 | Debugger Agent scaffold | ⬜ Todo | §7.5 |
-| 5.2 | Stack trace capture + parsing | ⬜ Todo | FR-11 |
-| 5.3 | Failing file identification | ⬜ Todo | FR-11 |
-| 5.4 | Patch generation (minimal surgical) | ⬜ Todo | FR-11, §7.5 |
-| 5.5 | File replacement mechanism | ⬜ Todo | FR-11 |
-| 5.6 | Application restart after patch | ⬜ Todo | FR-11 |
-| 5.7 | Re-test cycle trigger | ⬜ Todo | FR-11 |
-| 5.8 | Retry limit enforcement | ⬜ Todo | FR-11 |
-| 5.9 | Build failure analysis | ⬜ Todo | §7.5 |
-| 5.10 | Rendering issue analysis | ⬜ Todo | §7.5 |
+| 5.1 | Debugger Agent scaffold | ✅ Done | `packages/agents/debugger` |
+| 5.2 | Stack trace capture + parsing | ✅ Done | FR-11 — `identifyFailingFile()` regex |
+| 5.3 | Failing file identification | ✅ Done | FR-11 — mapped to `src/game/` |
+| 5.4 | Patch generation (minimal surgical) | ✅ Done | FR-11, §7.5 — `generatePatch()` AST logic |
+| 5.5 | File replacement mechanism | ✅ Done | FR-11 — `writeFileSync` |
+| 5.6 | Application restart after patch | ✅ Done | FR-11 — Orchestrator devServer loop |
+| 5.7 | Re-test cycle trigger | ✅ Done | FR-11 — Orchestrator while loop |
+| 5.8 | Retry limit enforcement | ✅ Done | FR-11 — `MAX_RETRIES = 3` |
+| 5.9 | Build failure analysis | ✅ Done | §7.5 — Orchestrator throws build err |
+| 5.10 | Rendering issue analysis | ✅ Done | §7.5 — WebGL regex matching |
 
 ---
 
