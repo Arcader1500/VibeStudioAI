@@ -87,15 +87,15 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1C.1 | Scaffold Fastify TypeScript project | 🔵 In Progress | Entry point created |
-| 1C.2 | Set up Zod validation schemas | 🔵 In Progress | On POST /projects |
+| 1C.1 | Scaffold Fastify TypeScript project | ✅ Done | `index.ts` handles init, health, router |
+| 1C.2 | Set up Zod validation schemas | ✅ Done | Fastify request validation working |
 | 1C.3 | `POST /projects` endpoint | ✅ Done | FR-8, API Spec §9 |
 | 1C.4 | `GET /projects/:id` endpoint | ✅ Done | API Spec §9 |
 | 1C.5 | `GET /projects/:id/logs` endpoint | ✅ Done | API Spec §9 |
 | 1C.6 | `GET /projects/:id/download` endpoint | ✅ Done | API Spec §9, FR-12 |
 | 1C.7 | WebSocket live log streaming | ⬜ Todo | — |
-| 1C.8 | BullMQ job queue setup | ⬜ Todo | — |
-| 1C.9 | PostgreSQL connection + migrations | ⬜ Todo | SQL files written, wiring pending |
+| 1C.8 | BullMQ job queue setup | ✅ Done | `queue.ts` configures `projects` queue |
+| 1C.9 | PostgreSQL connection + migrations | ✅ Done | `db.ts` pooling built and wired in routes |
 | 1C.10 | `projects` table migration | ✅ Done | 001_create_projects.sql |
 | 1C.11 | `agent_runs` table migration | ✅ Done | 002_create_agent_runs.sql |
 | 1C.12 | `runtime_errors` table migration | ✅ Done | 003_create_runtime_errors.sql |
@@ -107,7 +107,7 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1D.1 | Set up Antigravity SDK agent scaffold | 🔵 In Progress | Core logic written |
+| 1D.1 | Set up Antigravity SDK agent scaffold | ✅ Done | Core agent logic written in `director.ts` |
 | 1D.2 | Implement prompt ambiguity detection | ✅ Done | FR-2 — detectAmbiguity() |
 | 1D.3 | Implement follow-up question generation | ✅ Done | FR-2 — generateClarificationQuestions() |
 | 1D.4 | Implement `ProjectBlueprint` JSON schema | ✅ Done | FR-3 — schema.ts |
@@ -116,7 +116,7 @@ main                    ← stable, production-ready releases
 | 1D.7 | `AudioSpec` sub-schema | ✅ Done | §8 |
 | 1D.8 | `ControlSpec` sub-schema | ✅ Done | §8 |
 | 1D.9 | `DeploymentSpec` sub-schema | ✅ Done | §8 |
-| 1D.10 | Director ↔ Orchestrator integration | ⬜ Todo | FR-4 |
+| 1D.10 | Director ↔ Orchestrator integration | ✅ Done | Wired in `workers/orchestrator.ts` |
 
 ### 1E. Mechanics Agent (`packages/agents/mechanics`)
 

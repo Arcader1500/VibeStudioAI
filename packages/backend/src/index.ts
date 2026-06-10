@@ -4,7 +4,10 @@
  * SRS §4.B, §9 API Specification
  */
 import Fastify from 'fastify';
+import cors from '@fastify/cors';
 import { projectRoutes } from './routes/projects.js';
+import { pool } from './lib/db.js';
+import { orchestratorWorker } from './workers/orchestrator.js';
 
 const server = Fastify({
   logger: {
@@ -17,9 +20,25 @@ const server = Fastify({
 });
 
 // ---------------------------------------------------------------------------
+// Plugins
+// ---------------------------------------------------------------------------
+await server.register(cors, {
+  origin: '*',
+});
+
+// ---------------------------------------------------------------------------
 // Health check
 // ---------------------------------------------------------------------------
-server.get('/health', async () => ({ status: 'ok', version: '0.1.0' }));
+server.get('/health', async () => {
+  let dbStatus = 'down';
+  try {
+    await pool.query('SELECT 1');
+    dbStatus = 'up';
+  } catch (err) {
+    server.log.error('DB health check failed', err);
+  }
+  return { status: 'ok', version: '0.1.0', db: dbStatus };
+});
 
 // ---------------------------------------------------------------------------
 // Routes
@@ -35,6 +54,7 @@ const HOST = process.env.HOST ?? '0.0.0.0';
 try {
   await server.listen({ port: PORT, host: HOST });
   server.log.info(`VibeStudio AI Backend listening on http://${HOST}:${PORT}`);
+  server.log.info(`Orchestrator worker started for queue: ${orchestratorWorker.name}`);
 } catch (err) {
   server.log.error(err);
   process.exit(1);
