@@ -57,10 +57,10 @@ main                    ← stable, production-ready releases
 | 1.2 | Create `docs/PROJECT_TRACKER.md` | ✅ Done | This file |
 | 1.3 | Create root `README.md` | ✅ Done | — |
 | 1.4 | Create `.gitignore` for Node.js / TS mono-repo | ✅ Done | — |
-| 1.5 | Define mono-repo structure (`packages/`) | 🔵 In Progress | — |
-| 1.6 | Set up root `package.json` with workspaces | ⬜ Todo | pnpm workspaces |
+| 1.5 | Define mono-repo structure (`packages/`) | ✅ Done | pnpm workspaces |
+| 1.6 | Set up root `package.json` with workspaces | ✅ Done | pnpm-workspace.yaml |
 | 1.7 | Create `CONTRIBUTING.md` | ⬜ Todo | — |
-| 1.8 | Create `LICENSE` (MIT) | ⬜ Todo | — |
+| 1.8 | Create `LICENSE` (MIT) | ✅ Done | — |
 
 ### 1B. Frontend Scaffold (`packages/frontend`)
 
@@ -87,18 +87,18 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1C.1 | Scaffold Fastify TypeScript project | ⬜ Todo | — |
-| 1C.2 | Set up Zod validation schemas | ⬜ Todo | — |
-| 1C.3 | `POST /projects` endpoint | ⬜ Todo | FR-8, API Spec §9 |
-| 1C.4 | `GET /projects/:id` endpoint | ⬜ Todo | API Spec §9 |
-| 1C.5 | `GET /projects/:id/logs` endpoint | ⬜ Todo | API Spec §9 |
-| 1C.6 | `GET /projects/:id/download` endpoint | ⬜ Todo | API Spec §9, FR-12 |
+| 1C.1 | Scaffold Fastify TypeScript project | 🔵 In Progress | Entry point created |
+| 1C.2 | Set up Zod validation schemas | 🔵 In Progress | On POST /projects |
+| 1C.3 | `POST /projects` endpoint | ✅ Done | FR-8, API Spec §9 |
+| 1C.4 | `GET /projects/:id` endpoint | ✅ Done | API Spec §9 |
+| 1C.5 | `GET /projects/:id/logs` endpoint | ✅ Done | API Spec §9 |
+| 1C.6 | `GET /projects/:id/download` endpoint | ✅ Done | API Spec §9, FR-12 |
 | 1C.7 | WebSocket live log streaming | ⬜ Todo | — |
 | 1C.8 | BullMQ job queue setup | ⬜ Todo | — |
-| 1C.9 | PostgreSQL connection + migrations | ⬜ Todo | DB Schema §10 |
-| 1C.10 | `projects` table migration | ⬜ Todo | DB Schema §10 |
-| 1C.11 | `agent_runs` table migration | ⬜ Todo | DB Schema §10 |
-| 1C.12 | `runtime_errors` table migration | ⬜ Todo | DB Schema §10 |
+| 1C.9 | PostgreSQL connection + migrations | ⬜ Todo | SQL files written, wiring pending |
+| 1C.10 | `projects` table migration | ✅ Done | 001_create_projects.sql |
+| 1C.11 | `agent_runs` table migration | ✅ Done | 002_create_agent_runs.sql |
+| 1C.12 | `runtime_errors` table migration | ✅ Done | 003_create_runtime_errors.sql |
 
 ### 1D. Director Agent (`packages/agents/director`)
 
@@ -107,15 +107,15 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1D.1 | Set up Antigravity SDK agent scaffold | ⬜ Todo | FR-2, §7.1 |
-| 1D.2 | Implement prompt ambiguity detection | ⬜ Todo | FR-2 |
-| 1D.3 | Implement follow-up question generation | ⬜ Todo | FR-2 |
-| 1D.4 | Implement `ProjectBlueprint` JSON schema | ⬜ Todo | FR-3, Data Models §8 |
-| 1D.5 | Blueprint validation with Zod | ⬜ Todo | — |
-| 1D.6 | `GameplaySpec` sub-schema | ⬜ Todo | §8 |
-| 1D.7 | `AudioSpec` sub-schema | ⬜ Todo | §8 |
-| 1D.8 | `ControlSpec` sub-schema | ⬜ Todo | §8 |
-| 1D.9 | `DeploymentSpec` sub-schema | ⬜ Todo | §8 |
+| 1D.1 | Set up Antigravity SDK agent scaffold | 🔵 In Progress | Core logic written |
+| 1D.2 | Implement prompt ambiguity detection | ✅ Done | FR-2 — detectAmbiguity() |
+| 1D.3 | Implement follow-up question generation | ✅ Done | FR-2 — generateClarificationQuestions() |
+| 1D.4 | Implement `ProjectBlueprint` JSON schema | ✅ Done | FR-3 — schema.ts |
+| 1D.5 | Blueprint validation with Zod | ✅ Done | ProjectBlueprintSchema |
+| 1D.6 | `GameplaySpec` sub-schema | ✅ Done | §8 |
+| 1D.7 | `AudioSpec` sub-schema | ✅ Done | §8 |
+| 1D.8 | `ControlSpec` sub-schema | ✅ Done | §8 |
+| 1D.9 | `DeploymentSpec` sub-schema | ✅ Done | §8 |
 | 1D.10 | Director ↔ Orchestrator integration | ⬜ Todo | FR-4 |
 
 ### 1E. Mechanics Agent (`packages/agents/mechanics`)
@@ -310,10 +310,10 @@ main                    ← stable, production-ready releases
 
 | Commit | Branch | Description |
 |--------|--------|-------------|
-| Initial | `main` | `chore: initial commit — add SRS and project tracker` |
-| — | `develop` | `chore: set up develop integration branch` |
-| — | `feature/phase-1-core-mvp` | `feat(p1): initialize phase 1 feature branch` |
-| — | `feature/phase-1-core-mvp` | `feat(p1): add root .gitignore, README, and mono-repo structure` |
+| `1c1399b` | `main` | `chore: initial commit — SRS, tracker, README, .gitignore, LICENSE` |
+| — | `develop` | Branched from `main`, pushed to origin |
+| `33b36c3` | `feature/phase-1-core-mvp` | `feat(p1): mono-repo package scaffolds and shared types` |
+| `ecc5223` | `feature/phase-1-core-mvp` | `feat(p1/backend): Fastify backend scaffold + DB migrations` |
 
 ---
 

@@ -1,0 +1,12 @@
+{
+  "name": "@vibestudio/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VibeStudio AI — Shared TypeScript type definitions and utilities",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  }
+}

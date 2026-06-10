@@ -1,0 +1,11 @@
+{
+  "name": "@vibestudio/build-system",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VibeStudio AI — Build System (Vite project scaffolding, module assembly, pnpm runner, zip export)",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  }
+}
