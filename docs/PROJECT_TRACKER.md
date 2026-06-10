@@ -57,10 +57,10 @@ main                    ← stable, production-ready releases
 | 1.2 | Create `docs/PROJECT_TRACKER.md` | ✅ Done | This file |
 | 1.3 | Create root `README.md` | ✅ Done | — |
 | 1.4 | Create `.gitignore` for Node.js / TS mono-repo | ✅ Done | — |
-| 1.5 | Define mono-repo structure (`packages/`) | 🔵 In Progress | — |
-| 1.6 | Set up root `package.json` with workspaces | ⬜ Todo | pnpm workspaces |
+| 1.5 | Define mono-repo structure (`packages/`) | ✅ Done | pnpm workspaces |
+| 1.6 | Set up root `package.json` with workspaces | ✅ Done | pnpm-workspace.yaml |
 | 1.7 | Create `CONTRIBUTING.md` | ⬜ Todo | — |
-| 1.8 | Create `LICENSE` (MIT) | ⬜ Todo | — |
+| 1.8 | Create `LICENSE` (MIT) | ✅ Done | — |
 
 ### 1B. Frontend Scaffold (`packages/frontend`)
 
@@ -69,16 +69,16 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1B.1 | Scaffold Vite + React + TS project | ⬜ Todo | `pnpm create vite` |
-| 1B.2 | Configure TailwindCSS | ⬜ Todo | — |
-| 1B.3 | Set up Zustand store structure | ⬜ Todo | — |
-| 1B.4 | Build prompt submission UI | ⬜ Todo | FR-1 |
-| 1B.5 | Build interactive clarification modal | ⬜ Todo | FR-2 |
-| 1B.6 | Build live build progress visualization | ⬜ Todo | FR-1 |
-| 1B.7 | Build game preview iframe/panel | ⬜ Todo | — |
-| 1B.8 | Build source code download UI | ⬜ Todo | FR-12 |
-| 1B.9 | Connect to backend via REST + WebSocket | ⬜ Todo | — |
-| 1B.10 | Responsive layout + accessibility pass | ⬜ Todo | — |
+| 1B.1 | Scaffold Vite + React + TS project | ✅ Done | Manual scaffold (Vite interactive blocked) |
+| 1B.2 | Configure TailwindCSS | ✅ Done | tailwind.config.js + postcss.config.js |
+| 1B.3 | Set up Zustand store structure | ✅ Done | src/store/projectStore.ts |
+| 1B.4 | Build prompt submission UI | ✅ Done | FR-1 — PromptInput.tsx |
+| 1B.5 | Build interactive clarification modal | ✅ Done | FR-2 — ClarificationModal.tsx |
+| 1B.6 | Build live build progress visualization | ✅ Done | BuildProgress.tsx with phase pipeline |
+| 1B.7 | Build game preview iframe/panel | ✅ Done | GamePreview.tsx |
+| 1B.8 | Build source code download UI | ✅ Done | FR-12 — download/open/view-source in GamePreview |
+| 1B.9 | Connect to backend via REST + WebSocket | ✅ Done | src/api/client.ts |
+| 1B.10 | Responsive layout + accessibility pass | ✅ Done | unique IDs, aria-label on all interactive elements |
 
 ### 1C. Backend Scaffold (`packages/backend`)
 
@@ -87,18 +87,18 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1C.1 | Scaffold Fastify TypeScript project | ⬜ Todo | — |
-| 1C.2 | Set up Zod validation schemas | ⬜ Todo | — |
-| 1C.3 | `POST /projects` endpoint | ⬜ Todo | FR-8, API Spec §9 |
-| 1C.4 | `GET /projects/:id` endpoint | ⬜ Todo | API Spec §9 |
-| 1C.5 | `GET /projects/:id/logs` endpoint | ⬜ Todo | API Spec §9 |
-| 1C.6 | `GET /projects/:id/download` endpoint | ⬜ Todo | API Spec §9, FR-12 |
+| 1C.1 | Scaffold Fastify TypeScript project | 🔵 In Progress | Entry point created |
+| 1C.2 | Set up Zod validation schemas | 🔵 In Progress | On POST /projects |
+| 1C.3 | `POST /projects` endpoint | ✅ Done | FR-8, API Spec §9 |
+| 1C.4 | `GET /projects/:id` endpoint | ✅ Done | API Spec §9 |
+| 1C.5 | `GET /projects/:id/logs` endpoint | ✅ Done | API Spec §9 |
+| 1C.6 | `GET /projects/:id/download` endpoint | ✅ Done | API Spec §9, FR-12 |
 | 1C.7 | WebSocket live log streaming | ⬜ Todo | — |
 | 1C.8 | BullMQ job queue setup | ⬜ Todo | — |
-| 1C.9 | PostgreSQL connection + migrations | ⬜ Todo | DB Schema §10 |
-| 1C.10 | `projects` table migration | ⬜ Todo | DB Schema §10 |
-| 1C.11 | `agent_runs` table migration | ⬜ Todo | DB Schema §10 |
-| 1C.12 | `runtime_errors` table migration | ⬜ Todo | DB Schema §10 |
+| 1C.9 | PostgreSQL connection + migrations | ⬜ Todo | SQL files written, wiring pending |
+| 1C.10 | `projects` table migration | ✅ Done | 001_create_projects.sql |
+| 1C.11 | `agent_runs` table migration | ✅ Done | 002_create_agent_runs.sql |
+| 1C.12 | `runtime_errors` table migration | ✅ Done | 003_create_runtime_errors.sql |
 
 ### 1D. Director Agent (`packages/agents/director`)
 
@@ -107,15 +107,15 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1D.1 | Set up Antigravity SDK agent scaffold | ⬜ Todo | FR-2, §7.1 |
-| 1D.2 | Implement prompt ambiguity detection | ⬜ Todo | FR-2 |
-| 1D.3 | Implement follow-up question generation | ⬜ Todo | FR-2 |
-| 1D.4 | Implement `ProjectBlueprint` JSON schema | ⬜ Todo | FR-3, Data Models §8 |
-| 1D.5 | Blueprint validation with Zod | ⬜ Todo | — |
-| 1D.6 | `GameplaySpec` sub-schema | ⬜ Todo | §8 |
-| 1D.7 | `AudioSpec` sub-schema | ⬜ Todo | §8 |
-| 1D.8 | `ControlSpec` sub-schema | ⬜ Todo | §8 |
-| 1D.9 | `DeploymentSpec` sub-schema | ⬜ Todo | §8 |
+| 1D.1 | Set up Antigravity SDK agent scaffold | 🔵 In Progress | Core logic written |
+| 1D.2 | Implement prompt ambiguity detection | ✅ Done | FR-2 — detectAmbiguity() |
+| 1D.3 | Implement follow-up question generation | ✅ Done | FR-2 — generateClarificationQuestions() |
+| 1D.4 | Implement `ProjectBlueprint` JSON schema | ✅ Done | FR-3 — schema.ts |
+| 1D.5 | Blueprint validation with Zod | ✅ Done | ProjectBlueprintSchema |
+| 1D.6 | `GameplaySpec` sub-schema | ✅ Done | §8 |
+| 1D.7 | `AudioSpec` sub-schema | ✅ Done | §8 |
+| 1D.8 | `ControlSpec` sub-schema | ✅ Done | §8 |
+| 1D.9 | `DeploymentSpec` sub-schema | ✅ Done | §8 |
 | 1D.10 | Director ↔ Orchestrator integration | ⬜ Todo | FR-4 |
 
 ### 1E. Mechanics Agent (`packages/agents/mechanics`)
@@ -125,15 +125,15 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1E.1 | Set up Antigravity SDK agent scaffold | ⬜ Todo | §7.2 |
-| 1E.2 | Generate `src/game/game.js` (Phaser config) | ⬜ Todo | FR-5 |
-| 1E.3 | Generate `src/game/scenes/*` (scene files) | ⬜ Todo | FR-5 |
-| 1E.4 | Generate `src/game/entities/*` (player, enemy, ui) | ⬜ Todo | FR-5, §7.2 |
-| 1E.5 | Implement game loop generation | ⬜ Todo | FR-5 |
-| 1E.6 | Implement physics generation | ⬜ Todo | FR-5 |
-| 1E.7 | Implement combat system generation | ⬜ Todo | FR-5 |
-| 1E.8 | Implement input handling generation | ⬜ Todo | FR-5 |
-| 1E.9 | Win/loss condition code generation | ⬜ Todo | FR-3 |
+| 1E.1 | Set up Antigravity SDK agent scaffold | ✅ Done | Core generator written |
+| 1E.2 | Generate `src/game/game.js` (Phaser config) | ✅ Done | FR-5 — generateGameConfig() |
+| 1E.3 | Generate `src/game/scenes/*` (scene files) | ✅ Done | FR-5 — 5 scenes (Boot/Preload/Menu/Game/GameOver) |
+| 1E.4 | Generate `src/game/entities/*` (player, enemy, ui) | ✅ Done | FR-5, §7.2 — Player, Enemy, UI |
+| 1E.5 | Implement game loop generation | ✅ Done | FR-5 — GameScene.update() |
+| 1E.6 | Implement physics generation | ✅ Done | FR-5 — Arcade physics, gravity per camera type |
+| 1E.7 | Implement combat system generation | ✅ Done | FR-5 — bullets, collisions, hit detection |
+| 1E.8 | Implement input handling generation | ✅ Done | FR-5 — WASD+arrows, space fire, mouse aim |
+| 1E.9 | Win/loss condition code generation | ✅ Done | FR-3 — wave complete, lives=0 game over |
 
 ### 1F. Build System (`packages/build-system`)
 
@@ -142,12 +142,12 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1F.1 | Scaffold Vite project creator utility | ⬜ Todo | FR-8 |
-| 1F.2 | Assemble generated modules into project | ⬜ Todo | FR-8 |
-| 1F.3 | Install dependencies via `pnpm install` | ⬜ Todo | FR-9 |
-| 1F.4 | Run `pnpm build` and capture output | ⬜ Todo | FR-9 |
-| 1F.5 | Start `pnpm dev` server | ⬜ Todo | FR-10 |
-| 1F.6 | Generate export zip package | ⬜ Todo | FR-12 |
+| 1F.1 | Scaffold Vite project creator utility | ✅ Done | FR-8 — assembler.ts: buildViteConfig() |
+| 1F.2 | Assemble generated modules into project | ✅ Done | FR-8 — assembleProject() writes full tree |
+| 1F.3 | Install dependencies via `pnpm install` | ✅ Done | FR-9 — runner.ts: runInstall() |
+| 1F.4 | Run `pnpm build` and capture output | ✅ Done | FR-9 — runner.ts: runBuild() |
+| 1F.5 | Start `pnpm dev` server | ✅ Done | FR-10 — runner.ts: startDevServer() |
+| 1F.6 | Generate export zip package | ⬜ Todo | FR-12 — planned |
 
 ---
 
@@ -310,10 +310,10 @@ main                    ← stable, production-ready releases
 
 | Commit | Branch | Description |
 |--------|--------|-------------|
-| Initial | `main` | `chore: initial commit — add SRS and project tracker` |
-| — | `develop` | `chore: set up develop integration branch` |
-| — | `feature/phase-1-core-mvp` | `feat(p1): initialize phase 1 feature branch` |
-| — | `feature/phase-1-core-mvp` | `feat(p1): add root .gitignore, README, and mono-repo structure` |
+| `1c1399b` | `main` | `chore: initial commit — SRS, tracker, README, .gitignore, LICENSE` |
+| — | `develop` | Branched from `main`, pushed to origin |
+| `33b36c3` | `feature/phase-1-core-mvp` | `feat(p1): mono-repo package scaffolds and shared types` |
+| `ecc5223` | `feature/phase-1-core-mvp` | `feat(p1/backend): Fastify backend scaffold + DB migrations` |
 
 ---
 
