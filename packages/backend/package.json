@@ -24,7 +24,8 @@
     "@vibestudio/agents-asset": "workspace:*",
     "@vibestudio/agents-audio": "workspace:*",
     "@vibestudio/build-system": "workspace:*",
-    "@vibestudio/runtime-verifier": "workspace:*"
+    "@vibestudio/runtime-verifier": "workspace:*",
+    "@vibestudio/agents-debugger": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",
