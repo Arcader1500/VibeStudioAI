@@ -39,12 +39,20 @@ export async function projectRoutes(app: FastifyInstance) {
     }
 
     const projectId = randomUUID();
+    const aiProvider = request.headers['x-ai-provider'] || 'auto';
+    const aiKey = request.headers['x-openrouter-key'] || '';
+
     await query(
       'INSERT INTO projects (id, prompt, status) VALUES ($1, $2, $3)',
       [projectId, result.data.prompt, 'pending']
     );
 
-    await projectQueue.add('build', { projectId, prompt: result.data.prompt });
+    await projectQueue.add('build', { 
+      projectId, 
+      prompt: result.data.prompt,
+      aiProvider,
+      aiKey
+    });
 
     app.log.info({ projectId }, 'Project created and enqueued');
 

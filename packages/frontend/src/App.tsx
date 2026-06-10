@@ -9,6 +9,7 @@ import { ClarificationModal } from '@/components/ClarificationModal'
 import { BuildProgress }     from '@/components/BuildProgress'
 import { GamePreview }       from '@/components/GamePreview'
 import { ErrorBanner }       from '@/components/ErrorBanner'
+import { SettingsModal }     from '@/components/SettingsModal'
 
 // Feature cards shown on the idle screen
 const FEATURES = [
@@ -21,7 +22,7 @@ const FEATURES = [
 ]
 
 export default function App() {
-  const { phase, clarificationQuestions, clarificationComplete } = useProjectStore()
+  const { phase, clarificationQuestions, clarificationComplete, showSettings } = useProjectStore()
 
   const isIdle        = phase === 'idle'
   const isBuilding    = !isIdle && phase !== 'completed' && phase !== 'failed'
@@ -80,6 +81,9 @@ export default function App() {
 
       {/* Clarification overlay — FR-2 */}
       {showClarify && <ClarificationModal />}
+
+      {/* Settings Modal */}
+      {showSettings && <SettingsModal />}
     </div>
   )
 }

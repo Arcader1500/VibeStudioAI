@@ -1,9 +1,11 @@
 /**
  * Navbar — top navigation bar
  */
-import { Github, Zap, BookOpen } from 'lucide-react'
+import { Github, Zap, BookOpen, Settings } from 'lucide-react'
+import { useProjectStore } from '@/store/projectStore'
 
 export function Navbar() {
+  const setShowSettings = useProjectStore((s) => s.setShowSettings)
   return (
     <header className="sticky top-0 z-40 border-b border-white/[0.05] bg-surface-900/80 backdrop-blur-xl">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -29,6 +31,14 @@ export function Navbar() {
             <BookOpen className="w-3.5 h-3.5" />
             <span>Docs</span>
           </a>
+          <button
+            onClick={() => setShowSettings(true)}
+            className="btn-ghost text-white/50"
+            id="nav-settings"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            <span className="hidden sm:block">Settings</span>
+          </button>
           <a
             href="https://github.com/Arcader1500/VibeStudioAI"
             target="_blank"
