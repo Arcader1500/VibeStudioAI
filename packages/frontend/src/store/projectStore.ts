@@ -58,6 +58,11 @@ export interface ProjectState {
   // UI
   isLoading: boolean
   error: string | null
+
+  // Settings
+  aiProvider: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek'
+  openRouterKey: string
+  showSettings: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -79,6 +84,11 @@ interface ProjectActions {
   setError: (error: string | null) => void
   setLoading: (loading: boolean) => void
   reset: () => void
+
+  // Settings
+  setAiProvider: (provider: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek') => void
+  setOpenRouterKey: (key: string) => void
+  setShowSettings: (show: boolean) => void
 }
 
 // ---------------------------------------------------------------------------
@@ -99,6 +109,9 @@ const initialState: ProjectState = {
   downloadUrl: null,
   isLoading: false,
   error: null,
+  aiProvider: 'auto',
+  openRouterKey: localStorage.getItem('VIBESTUDIO_API_KEY') || '',
+  showSettings: false,
 }
 
 // ---------------------------------------------------------------------------
@@ -148,7 +161,16 @@ export const useProjectStore = create<ProjectState & ProjectActions>()(
 
       setLoading: (isLoading) => set({ isLoading }),
 
-      reset: () => set(initialState),
+      reset: () => set({ ...initialState, openRouterKey: localStorage.getItem('VIBESTUDIO_API_KEY') || '' }),
+
+      setAiProvider: (aiProvider) => set({ aiProvider }),
+      
+      setOpenRouterKey: (key) => {
+        localStorage.setItem('VIBESTUDIO_API_KEY', key)
+        set({ openRouterKey: key })
+      },
+      
+      setShowSettings: (showSettings) => set({ showSettings }),
     }),
     { name: 'vibestudio-project' }
   )

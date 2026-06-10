@@ -14,7 +14,7 @@ const EXAMPLE_PROMPTS = [
 ]
 
 export function PromptInput() {
-  const { prompt, setPrompt, isLoading, startProject, setError, setLoading, setClarificationQuestions } =
+  const { prompt, setPrompt, isLoading, startProject, setError, setLoading, setClarificationQuestions, aiProvider, openRouterKey, setShowSettings } =
     useProjectStore()
   const [charCount, setCharCount] = useState(0)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -43,9 +43,15 @@ export function PromptInput() {
     if (!prompt.trim() || isLoading) return
 
     try {
+      if (!openRouterKey && aiProvider !== 'auto') {
+        // If they chose a specific provider but no key, warn them. Auto uses server key.
+        setShowSettings(true)
+        throw new Error('Please enter your OpenRouter API Key in settings first.')
+      }
+
       setLoading(true)
       setError(null)
-      const { projectId } = await createProject(prompt.trim())
+      const { projectId } = await createProject(prompt.trim(), { provider: aiProvider, key: openRouterKey })
       startProject(projectId)
 
       // TODO: Connect WebSocket for live updates
