@@ -159,14 +159,14 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 2.1 | Asset Agent scaffold | ⬜ Todo | §7.3 |
-| 2.2 | Sprite matrix generation (Option A) | ⬜ Todo | FR-6 |
-| 2.3 | Base64 Data URI generation (Option B) | ⬜ Todo | FR-6 |
-| 2.4 | Tile generation | ⬜ Todo | §7.3 |
-| 2.5 | Icon generation | ⬜ Todo | §7.3 |
-| 2.6 | Particle / effect generation | ⬜ Todo | §7.3 |
-| 2.7 | Asset registry module | ⬜ Todo | — |
-| 2.8 | Asset injection into Phaser scenes | ⬜ Todo | — |
+| 2.1 | Asset Agent scaffold | ✅ Done | packages/agents/asset/src/asset.ts |
+| 2.2 | Sprite matrix generation (Option A) | ✅ Done | FR-6 — `buildSpriteMatrices()` |
+| 2.3 | Base64 Data URI generation (Option B) | ✅ Done | FR-6 — `matrixToDataURI()` |
+| 2.4 | Tile generation | ✅ Done | §7.3 — `buildTileDefinitions()` |
+| 2.5 | Icon generation | ✅ Done | §7.3 — `buildIconDefinitions()` |
+| 2.6 | Particle / effect generation | ✅ Done | §7.3 — `buildEffectDefinitions()` |
+| 2.7 | Asset registry module | ✅ Done | `assetsCode` generator creates `assets.js` |
+| 2.8 | Asset injection into Phaser scenes | ✅ Done | Handled via `loadAssets()` |
 | 2.9 | Procedural SVG generation (Option C) | ⬜ Todo | FR-6 (future) |
 
 ---
@@ -179,13 +179,13 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 3.1 | Audio Agent scaffold | ⬜ Todo | §7.4 |
-| 3.2 | Background music system (Web Audio API) | ⬜ Todo | FR-7 |
-| 3.3 | Sound effects generation | ⬜ Todo | FR-7 |
-| 3.4 | Ambient sound generation | ⬜ Todo | FR-7 |
-| 3.5 | `AudioContext` + `OscillatorNode` engine | ⬜ Todo | FR-7 |
-| 3.6 | Event-driven audio trigger system | ⬜ Todo | §7.4 |
-| 3.7 | Audio injection into Phaser scenes | ⬜ Todo | — |
+| 3.1 | Audio Agent scaffold | ✅ Done | packages/agents/audio/src/audio.ts |
+| 3.2 | Background music system (Web Audio API) | ✅ Done | FR-7 — `generateMusicEngine()` (chiptune/ambient/etc) |
+| 3.3 | Sound effects generation | ✅ Done | FR-7 — `generateSfxEngine()` (8 distinct SFX) |
+| 3.4 | Ambient sound generation | ✅ Done | FR-7 — `generateAmbientEngine()` (multi-drone pad) |
+| 3.5 | `AudioContext` + `OscillatorNode` engine | ✅ Done | FR-7 — implemented purely natively |
+| 3.6 | Event-driven audio trigger system | ✅ Done | §7.4 — exports `sfx` and music controls |
+| 3.7 | Audio injection into Phaser scenes | ✅ Done | Handled via `initAudio()` and exports |
 
 ---
 
