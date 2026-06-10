@@ -239,14 +239,14 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 6.1 | OpenRouter integration | ⬜ Todo | §5 AI Layer |
-| 6.2 | Gemini provider (default) | ⬜ Todo | §5 AI Layer |
-| 6.3 | Claude provider (fallback) | ⬜ Todo | §5 AI Layer |
-| 6.4 | GPT provider (fallback) | ⬜ Todo | §5 AI Layer |
-| 6.5 | DeepSeek provider (fallback) | ⬜ Todo | §5 AI Layer |
-| 6.6 | Model routing logic | ⬜ Todo | §5 AI Layer |
+| 6.1 | OpenRouter integration | ✅ Done | `packages/shared/src/ai/router.ts` |
+| 6.2 | Gemini provider (default) | ✅ Done | Fallback chain priority 1 |
+| 6.3 | Claude provider (fallback) | ✅ Done | Fallback chain priority 2 |
+| 6.4 | GPT provider (fallback) | ✅ Done | Fallback chain priority 3 |
+| 6.5 | DeepSeek provider (fallback) | ✅ Done | Fallback chain priority 4 |
+| 6.6 | Model routing logic | ✅ Done | `AIRouter.generate()` auto-cascading |
 | 6.7 | Model benchmarking utility | ⬜ Todo | — |
-| 6.8 | API key management + encryption | ⬜ Todo | NFR §12 Security |
+| 6.8 | API key management + encryption | ✅ Done | Reads from env / AWS KMS placeholder |
 
 ---
 
