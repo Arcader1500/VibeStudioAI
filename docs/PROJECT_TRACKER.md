@@ -197,16 +197,16 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 4.1 | Playwright + Chromium headless setup | ⬜ Todo | FR-10, §4.D |
-| 4.2 | Game launch automation | ⬜ Todo | FR-10 |
-| 4.3 | 5-second observation window | ⬜ Todo | FR-10 |
-| 4.4 | `console.error` capture | ⬜ Todo | FR-10 |
-| 4.5 | Uncaught exception capture | ⬜ Todo | FR-10 |
-| 4.6 | Failed network request capture | ⬜ Todo | FR-10 |
-| 4.7 | WebGL error capture | ⬜ Todo | FR-10 |
-| 4.8 | Screenshot capture | ⬜ Todo | §4.D |
-| 4.9 | Telemetry report generation | ⬜ Todo | — |
-| 4.10 | Trigger Debugger Agent on failure | ⬜ Todo | FR-11 |
+| 4.1 | Playwright + Chromium headless setup | ✅ Done | `packages/runtime-verifier/package.json` |
+| 4.2 | Game launch automation | ✅ Done | `verifier.ts` -> `page.goto()` and canvas click |
+| 4.3 | 5-second observation window | ✅ Done | `waitForTimeout(observationTimeMs)` |
+| 4.4 | `console.error` capture | ✅ Done | `page.on('console')` |
+| 4.5 | Uncaught exception capture | ✅ Done | `page.on('pageerror')` |
+| 4.6 | Failed network request capture | ✅ Done | `page.on('requestfailed')` |
+| 4.7 | WebGL error capture | ✅ Done | WebGL string detection in console logs |
+| 4.8 | Screenshot capture | ✅ Done | `page.screenshot()` to base64 |
+| 4.9 | Telemetry report generation | ✅ Done | Returns `TelemetryReport` object |
+| 4.10 | Trigger Debugger Agent on failure | ⬜ Todo | Wired to Orchestrator (fails build pending Phase 5) |
 
 ---
 
