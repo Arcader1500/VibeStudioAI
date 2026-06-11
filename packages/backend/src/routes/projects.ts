@@ -27,6 +27,23 @@ import { projectQueue } from '../lib/queue.js';
 // ---------------------------------------------------------------------------
 
 export async function projectRoutes(app: FastifyInstance) {
+  // ---------------------------------------------------------------------------
+  // GET /projects (Project History)
+  // ---------------------------------------------------------------------------
+  app.get('/', async (request, reply) => {
+    const userId = request.headers['authorization']?.replace('Bearer ', '');
+    if (!userId) {
+      return reply.status(401).send({ error: 'Unauthorized. Missing Bearer token.' });
+    }
+
+    try {
+      const res = await query('SELECT id, prompt, status, created_at FROM projects WHERE user_id = $1 ORDER BY created_at DESC', [userId]);
+      return { projects: res.rows };
+    } catch (e) {
+      reply.status(500).send({ error: 'Failed to fetch project history' });
+    }
+  });
+
   /**
    * POST /projects
    * SRS FR-1: Accept a natural language game description
@@ -41,11 +58,19 @@ export async function projectRoutes(app: FastifyInstance) {
     const projectId = randomUUID();
     const aiProvider = request.headers['x-ai-provider'] || 'auto';
     const aiKey = request.headers['x-openrouter-key'] || '';
+    const userId = request.headers['authorization']?.replace('Bearer ', '') || null;
 
-    await query(
-      'INSERT INTO projects (id, prompt, status) VALUES ($1, $2, $3)',
-      [projectId, result.data.prompt, 'pending']
-    );
+    if (userId) {
+      await query(
+        'INSERT INTO projects (id, prompt, status, user_id) VALUES ($1, $2, $3, $4)',
+        [projectId, result.data.prompt, 'pending', userId]
+      );
+    } else {
+      await query(
+        'INSERT INTO projects (id, prompt, status) VALUES ($1, $2, $3)',
+        [projectId, result.data.prompt, 'pending']
+      );
+    }
 
     await projectQueue.add('build', { 
       projectId, 

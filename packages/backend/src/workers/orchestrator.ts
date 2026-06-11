@@ -5,7 +5,7 @@ import { DirectorAgent } from '@vibestudio/agent-director';
 import { generateMechanics } from '@vibestudio/agent-mechanics';
 import { generateAssets } from '@vibestudio/agent-asset';
 import { generateAudio } from '@vibestudio/agent-audio';
-import { assembleProject, runInstall, runBuild, startDevServer } from '@vibestudio/build-system';
+import { assembleProject, runInstall, runBuild, startDevServer, uploadToCloud } from '@vibestudio/build-system';
 import { runVerification } from '@vibestudio/runtime-verifier';
 import { DebuggerAgent } from '@vibestudio/agent-debugger';
 import path from 'path';
@@ -137,6 +137,11 @@ export const orchestratorWorker = new Worker(
           verified = true;
         }
       }
+
+      // Phase 7: Deployment
+      await log('info', 'Deploying build to Cloud Storage...');
+      const deployUrl = await uploadToCloud(path.join(outputDir, 'dist'));
+      await log('info', `Game deployed successfully: ${deployUrl}`);
 
       // Complete
       await updatePhase('completed', 100);

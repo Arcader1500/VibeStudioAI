@@ -6,6 +6,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { projectRoutes } from './routes/projects.js';
+import { authRoutes } from './routes/auth.js';
 import { pool } from './lib/db.js';
 import { orchestratorWorker } from './workers/orchestrator.js';
 
@@ -44,6 +45,7 @@ server.get('/health', async () => {
 // Routes
 // ---------------------------------------------------------------------------
 await server.register(projectRoutes, { prefix: '/projects' });
+await server.register(authRoutes, { prefix: '/auth' });
 
 // ---------------------------------------------------------------------------
 // Start
