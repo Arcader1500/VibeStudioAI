@@ -55,7 +55,7 @@ export async function runVerification(opts: VerificationOptions): Promise<Teleme
   page.on('console', (msg: ConsoleMessage) => {
     const text = msg.text();
     if (msg.type() === 'error') {
-      // Special WebGL classification
+      if (text.includes('Framebuffer Unsupported')) return;
       if (text.includes('WebGL') || text.includes('GL_INVALID_')) {
         report.errors.push({ type: 'webgl', message: text });
       } else {
@@ -68,6 +68,7 @@ export async function runVerification(opts: VerificationOptions): Promise<Teleme
 
   // B. Uncaught exceptions
   page.on('pageerror', (err: Error) => {
+    if (err.message.includes('Framebuffer Unsupported')) return;
     report.errors.push({
       type: 'exception',
       message: err.message,

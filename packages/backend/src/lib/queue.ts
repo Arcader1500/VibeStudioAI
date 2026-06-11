@@ -4,11 +4,10 @@
 import { Queue, Worker, Job } from 'bullmq';
 import IORedis from 'ioredis';
 
-const connection = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379', {
+export const connectionOptions = {
+  host: process.env.REDIS_HOST || '127.0.0.1',
+  port: Number(process.env.REDIS_PORT) || 6379,
   maxRetriesPerRequest: null,
-});
+};
 
-export const projectQueue = new Queue('projects', { connection });
-
-// We define the worker elsewhere, but we export the connection for it
-export { connection };
+export const projectQueue = new Queue('projects', { connection: connectionOptions });

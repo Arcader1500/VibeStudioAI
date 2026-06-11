@@ -1,7 +1,7 @@
 import { Worker, Job } from 'bullmq';
-import { connection } from '../lib/queue.js';
+import { connectionOptions } from '../lib/queue.js';
 import { query } from '../lib/db.js';
-import { DirectorAgent } from '@vibestudio/agent-director';
+import { detectAmbiguity, generateBlueprint, createClarificationSession } from '@vibestudio/agent-director';
 import { generateMechanics } from '@vibestudio/agent-mechanics';
 import { generateAssets } from '@vibestudio/agent-asset';
 import { generateAudio } from '@vibestudio/agent-audio';
@@ -17,7 +17,7 @@ export const orchestratorWorker = new Worker(
     
     const log = async (level: string, message: string) => {
       await query(
-        'INSERT INTO agent_runs (project_id, agent_type, status, output) VALUES ($1, $2, $3, $4)',
+        'INSERT INTO agent_runs (project_id, agent_name, status, output) VALUES ($1, $2, $3, $4)',
         [projectId, 'orchestrator', 'running', JSON.stringify({ level, message, timestamp: new Date().toISOString() })]
       );
     };
@@ -36,16 +36,18 @@ export const orchestratorWorker = new Worker(
 
       // Phase 1D: Director Agent
       await log('info', 'Running Director Agent');
-      const director = new DirectorAgent();
-      const isAmbiguous = director.detectAmbiguity(prompt);
+      const isAmbiguous = detectAmbiguity(prompt);
       
       let blueprint;
       if (isAmbiguous) {
         // We simulate that clarification was already done by the frontend and passed in,
         // or for this automated worker we just force generation.
-        blueprint = director.generateBlueprint(prompt, { difficulty: 'Medium' });
+        const session = createClarificationSession(projectId, prompt);
+        session.answers = { difficulty: 'Medium', camera: 'Side Scroller', artStyle: 'Pixel Art', genre: 'Arcade' }; // Mock answers for MVP
+        blueprint = generateBlueprint(session);
       } else {
-        blueprint = director.generateBlueprint(prompt);
+        const session = createClarificationSession(projectId, prompt);
+        blueprint = generateBlueprint(session);
       }
 
       await query(
@@ -85,11 +87,11 @@ export const orchestratorWorker = new Worker(
       // Build & Install
       await log('info', 'Installing dependencies');
       const installRes = runInstall(outputDir);
-      if (!installRes.success) throw new Error('pnpm install failed: ' + installRes.stderr);
+      if (!installRes.success) throw new Error('npm install failed: ' + installRes.stderr);
 
       await log('info', 'Building generated project');
       const buildRes = runBuild(outputDir);
-      if (!buildRes.success) throw new Error('pnpm build failed: ' + buildRes.stderr);
+      if (!buildRes.success) throw new Error('npm build failed: ' + buildRes.stderr);
 
       // Phase 4 & 5: Runtime Verification & Self-Healing loop
       await updatePhase('verification', 75);
@@ -102,10 +104,14 @@ export const orchestratorWorker = new Worker(
       while (!verified && retries <= MAX_RETRIES) {
         await log('info', `Starting Dev Server for verification (Attempt ${retries + 1}/${MAX_RETRIES + 1})`);
         const port = 8080 + Math.floor(Math.random() * 1000); // randomize port to avoid conflicts
-        const devServer = startDevServer(outputDir, port);
-        
-        // Wait a moment for server to boot
-        await new Promise(r => setTimeout(r, 2000));
+        let devServer: any;
+        await new Promise<void>((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error('Dev server boot timeout')), 15000);
+          devServer = startDevServer(outputDir, port, (url) => {
+            clearTimeout(timeout);
+            resolve();
+          });
+        });
 
         await log('info', 'Running Playwright Telemetry Verification');
         const telemetry = await runVerification({ url: devServer.url });
@@ -154,7 +160,7 @@ export const orchestratorWorker = new Worker(
       throw error;
     }
   },
-  { connection }
+  { connection: connectionOptions }
 );
 
 orchestratorWorker.on('failed', (job, err) => {
