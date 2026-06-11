@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "description": "VibeStudio AI — Asset Agent (sprite, tile, icon, and effect generation)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",

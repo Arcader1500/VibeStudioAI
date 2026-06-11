@@ -2,7 +2,9 @@
   "name": "@vibestudio/agent-mechanics",
   "version": "0.1.0",
   "private": true,
-  "description": "VibeStudio AI — Mechanics Agent (Phaser 3 gameplay code generation)",
+  "description": "VibeStudio AI — Mechanics Agent (generates Phaser 3 components, physics, input, core game loop)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",

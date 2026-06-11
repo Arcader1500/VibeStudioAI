@@ -58,6 +58,16 @@ export interface ProjectState {
   // UI
   isLoading: boolean
   error: string | null
+
+  // Settings
+  aiProvider: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek'
+  openRouterKey: string
+  showSettings: boolean
+
+  // UI View
+  view: 'home' | 'past_games'
+  pastProjects: any[]
+  showLogsModal: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -79,6 +89,16 @@ interface ProjectActions {
   setError: (error: string | null) => void
   setLoading: (loading: boolean) => void
   reset: () => void
+
+  // Settings
+  setAiProvider: (provider: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek') => void
+  setOpenRouterKey: (key: string) => void
+  setShowSettings: (show: boolean) => void
+
+  // UI View
+  setView: (view: 'home' | 'past_games') => void
+  setPastProjects: (projects: any[]) => void
+  setShowLogsModal: (show: boolean) => void
 }
 
 // ---------------------------------------------------------------------------
@@ -99,6 +119,12 @@ const initialState: ProjectState = {
   downloadUrl: null,
   isLoading: false,
   error: null,
+  aiProvider: 'deepseek',
+  openRouterKey: localStorage.getItem('VIBESTUDIO_API_KEY') || '',
+  showSettings: false,
+  view: 'home',
+  pastProjects: [],
+  showLogsModal: false,
 }
 
 // ---------------------------------------------------------------------------
@@ -148,7 +174,19 @@ export const useProjectStore = create<ProjectState & ProjectActions>()(
 
       setLoading: (isLoading) => set({ isLoading }),
 
-      reset: () => set(initialState),
+      reset: () => set({ ...initialState, openRouterKey: localStorage.getItem('VIBESTUDIO_API_KEY') || '' }),
+
+      setAiProvider: (aiProvider) => set({ aiProvider }),
+      
+      setOpenRouterKey: (key) => {
+        localStorage.setItem('VIBESTUDIO_API_KEY', key)
+        set({ openRouterKey: key })
+      },
+      
+      setShowSettings: (showSettings) => set({ showSettings }),
+      setView: (view) => set({ view }),
+      setPastProjects: (pastProjects) => set({ pastProjects }),
+      setShowLogsModal: (showLogsModal) => set({ showLogsModal }),
     }),
     { name: 'vibestudio-project' }
   )

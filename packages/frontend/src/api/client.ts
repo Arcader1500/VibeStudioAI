@@ -7,8 +7,8 @@ const BASE_URL = import.meta.env.VITE_API_URL ?? ''
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
     ...init,
+    headers: { 'Content-Type': 'application/json', ...init?.headers },
   })
 
   if (!res.ok) {
@@ -22,9 +22,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 // ---------------------------------------------------------------------------
 // POST /projects  (FR-1)
 // ---------------------------------------------------------------------------
-export async function createProject(prompt: string): Promise<{ projectId: string }> {
+export async function createProject(prompt: string, config?: { provider: string; key: string }): Promise<{ projectId: string }> {
+  const headers: Record<string, string> = {}
+  if (config?.provider) headers['x-ai-provider'] = config.provider
+  if (config?.key) headers['x-openrouter-key'] = config.key
+
   return request('/projects', {
     method: 'POST',
+    headers,
     body: JSON.stringify({ prompt }),
   })
 }

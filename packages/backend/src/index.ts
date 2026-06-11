@@ -4,7 +4,11 @@
  * SRS §4.B, §9 API Specification
  */
 import Fastify from 'fastify';
+import cors from '@fastify/cors';
 import { projectRoutes } from './routes/projects.js';
+import { authRoutes } from './routes/auth.js';
+import { pool } from './lib/db.js';
+import { orchestratorWorker } from './workers/orchestrator.js';
 
 const server = Fastify({
   logger: {
@@ -16,26 +20,48 @@ const server = Fastify({
   },
 });
 
-// ---------------------------------------------------------------------------
-// Health check
-// ---------------------------------------------------------------------------
-server.get('/health', async () => ({ status: 'ok', version: '0.1.0' }));
+async function bootstrap() {
+  // ---------------------------------------------------------------------------
+  // Plugins
+  // ---------------------------------------------------------------------------
+  await server.register(cors, {
+    origin: '*',
+  });
 
-// ---------------------------------------------------------------------------
-// Routes
-// ---------------------------------------------------------------------------
-await server.register(projectRoutes, { prefix: '/projects' });
+  // ---------------------------------------------------------------------------
+  // Health check
+  // ---------------------------------------------------------------------------
+  server.get('/health', async () => {
+    let dbStatus = 'down';
+    try {
+      await pool.query('SELECT 1');
+      dbStatus = 'up';
+    } catch (err) {
+      server.log.error('DB health check failed', err);
+    }
+    return { status: 'ok', version: '0.1.0', db: dbStatus };
+  });
 
-// ---------------------------------------------------------------------------
-// Start
-// ---------------------------------------------------------------------------
-const PORT = Number(process.env.PORT ?? 3001);
-const HOST = process.env.HOST ?? '0.0.0.0';
+  // ---------------------------------------------------------------------------
+  // Routes
+  // ---------------------------------------------------------------------------
+  await server.register(projectRoutes, { prefix: '/projects' });
+  await server.register(authRoutes, { prefix: '/auth' });
 
-try {
-  await server.listen({ port: PORT, host: HOST });
-  server.log.info(`VibeStudio AI Backend listening on http://${HOST}:${PORT}`);
-} catch (err) {
-  server.log.error(err);
-  process.exit(1);
+  // ---------------------------------------------------------------------------
+  // Start
+  // ---------------------------------------------------------------------------
+  const PORT = Number(process.env.PORT ?? 3001);
+  const HOST = process.env.HOST ?? '0.0.0.0';
+
+  try {
+    await server.listen({ port: PORT, host: HOST });
+    server.log.info(`VibeStudio AI Backend listening on http://${HOST}:${PORT}`);
+    server.log.info(`Orchestrator worker started for queue: ${orchestratorWorker.name}`);
+  } catch (err) {
+    server.log.error(err);
+    process.exit(1);
+  }
 }
+
+bootstrap();

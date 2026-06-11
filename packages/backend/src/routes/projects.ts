@@ -19,14 +19,31 @@ const CreateProjectBody = z.object({
   prompt: z.string().min(10, 'Prompt must be at least 10 characters'),
 });
 
-// In-memory project store (replace with PostgreSQL in 1C.9)
-const projects = new Map<string, Record<string, unknown>>();
+import { query } from '../lib/db.js';
+import { projectQueue } from '../lib/queue.js';
 
 // ---------------------------------------------------------------------------
 // Route plugin
 // ---------------------------------------------------------------------------
 
 export async function projectRoutes(app: FastifyInstance) {
+  // ---------------------------------------------------------------------------
+  // GET /projects (Project History)
+  // ---------------------------------------------------------------------------
+  app.get('/', async (request, reply) => {
+    const userId = request.headers['authorization']?.replace('Bearer ', '');
+    if (!userId) {
+      return reply.status(401).send({ error: 'Unauthorized. Missing Bearer token.' });
+    }
+
+    try {
+      const res = await query('SELECT id, prompt, status, created_at FROM projects WHERE user_id = $1 ORDER BY created_at DESC', [userId]);
+      return { projects: res.rows };
+    } catch (e) {
+      reply.status(500).send({ error: 'Failed to fetch project history' });
+    }
+  });
+
   /**
    * POST /projects
    * SRS FR-1: Accept a natural language game description
@@ -39,19 +56,30 @@ export async function projectRoutes(app: FastifyInstance) {
     }
 
     const projectId = randomUUID();
-    const project = {
-      id: projectId,
+    const aiProvider = request.headers['x-ai-provider'] || 'auto';
+    const aiKey = request.headers['x-openrouter-key'] || '';
+    const userId = request.headers['authorization']?.replace('Bearer ', '') || null;
+
+    if (userId) {
+      await query(
+        'INSERT INTO projects (id, prompt, status, user_id) VALUES ($1, $2, $3, $4)',
+        [projectId, result.data.prompt, 'pending', userId]
+      );
+    } else {
+      await query(
+        'INSERT INTO projects (id, prompt, status) VALUES ($1, $2, $3)',
+        [projectId, result.data.prompt, 'pending']
+      );
+    }
+
+    await projectQueue.add('build', { 
+      projectId, 
       prompt: result.data.prompt,
-      status: 'pending',
-      blueprint: null,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+      aiProvider,
+      aiKey
+    });
 
-    projects.set(projectId, project);
-
-    // TODO (1C.8): Enqueue to BullMQ job queue → trigger Director Agent
-    app.log.info({ projectId }, 'Project created');
+    app.log.info({ projectId }, 'Project created and enqueued');
 
     return reply.status(201).send({ projectId });
   });
@@ -62,11 +90,11 @@ export async function projectRoutes(app: FastifyInstance) {
    */
   app.get('/:id', async (request, reply) => {
     const { id } = request.params as { id: string };
-    const project = projects.get(id);
-
-    if (!project) {
+    const res = await query('SELECT * FROM projects WHERE id = $1', [id]);
+    if (res.rowCount === 0) {
       return reply.status(404).send({ error: 'Project not found' });
     }
+    const project = res.rows[0];
 
     return reply.send({
       project,
@@ -74,7 +102,7 @@ export async function projectRoutes(app: FastifyInstance) {
         projectId: id,
         phase: project.status,
         progress: 0,
-        updatedAt: project['updatedAt'],
+        updatedAt: project.updated_at,
       },
     });
   });
@@ -86,14 +114,17 @@ export async function projectRoutes(app: FastifyInstance) {
   app.get('/:id/logs', async (request, reply) => {
     const { id } = request.params as { id: string };
 
-    if (!projects.has(id)) {
+    const res = await query('SELECT * FROM projects WHERE id = $1', [id]);
+    if (res.rowCount === 0) {
       return reply.status(404).send({ error: 'Project not found' });
     }
 
-    // TODO (1C.7): Stream logs from BullMQ / PostgreSQL
+    const logsRes = await query('SELECT output FROM agent_runs WHERE project_id = $1 ORDER BY created_at ASC', [id]);
+    const logs = logsRes.rows.map(row => JSON.parse(row.output));
+
     return reply.send({
       projectId: id,
-      logs: [],
+      logs,
     });
   });
 
@@ -103,16 +134,17 @@ export async function projectRoutes(app: FastifyInstance) {
    */
   app.get('/:id/download', async (request, reply) => {
     const { id } = request.params as { id: string };
-    const project = projects.get(id);
-
-    if (!project) {
+    const res = await query('SELECT status FROM projects WHERE id = $1', [id]);
+    if (res.rowCount === 0) {
       return reply.status(404).send({ error: 'Project not found' });
     }
+    
+    const status = res.rows[0].status;
 
-    if (project['status'] !== 'completed') {
+    if (status !== 'completed') {
       return reply.status(409).send({
         error: 'Project is not yet completed',
-        status: project['status'],
+        status,
       });
     }
 
