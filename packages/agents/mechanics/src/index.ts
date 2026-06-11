@@ -1,1 +1,1 @@
-export * from './mechanics.js'
+export { generateMechanics } from './mechanics.js';

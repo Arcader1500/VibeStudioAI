@@ -1,1 +1,1 @@
-export * from './asset.js'
+export { generateAssets } from './asset.js';

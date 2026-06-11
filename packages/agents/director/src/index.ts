@@ -1,2 +1,2 @@
-export * from './director.js';
-export * from './schema.js';
+export { detectAmbiguity, generateBlueprint, createClarificationSession } from './director.js';
+export { ProjectBlueprintSchema } from './schema.js';

@@ -1,1 +1,1 @@
-export * from './audio.js'
+export { generateAudio } from './audio.js';

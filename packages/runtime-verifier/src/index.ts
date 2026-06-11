@@ -1,1 +1,1 @@
-export * from './verifier.js';
+export { runVerification } from './verifier.js';

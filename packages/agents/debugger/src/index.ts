@@ -1,1 +1,1 @@
-export * from './debugger.js';
+export { DebuggerAgent } from './debugger.js';
