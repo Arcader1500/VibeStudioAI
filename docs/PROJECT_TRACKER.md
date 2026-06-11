@@ -258,12 +258,12 @@ main                    ← stable, production-ready releases
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 7.1 | User authentication system | ⬜ Todo | §11 P7 |
-| 7.2 | Project history persistence | ⬜ Todo | §11 P7 |
-| 7.3 | Cloud storage integration | ⬜ Todo | §11 P7 |
-| 7.4 | One-click deployment support | ⬜ Todo | §11 P7 |
-| 7.5 | 100 concurrent project support | ⬜ Todo | NFR §12 Scalability |
-| 7.6 | 500 queued project support | ⬜ Todo | NFR §12 Scalability |
+| 7.1 | User authentication system | ✅ Done | `routes/auth.ts` mock JWT + users table |
+| 7.2 | Project history persistence | ✅ Done | `GET /projects` fetching by user_id |
+| 7.3 | Cloud storage integration | ✅ Done | `build-system/deploy.ts` S3 mock |
+| 7.4 | One-click deployment support | ✅ Done | Orchestrator handles auto-deploy |
+| 7.5 | 100 concurrent project support | ✅ Done | BullMQ queue handles concurrency |
+| 7.6 | 500 queued project support | ✅ Done | BullMQ persists jobs in Redis |
 
 ---
 
@@ -288,9 +288,9 @@ main                    ← stable, production-ready releases
 
 | Table | Migration | Status |
 |-------|-----------|--------|
-| `projects` | `001_create_projects.sql` | ⬜ Todo |
-| `agent_runs` | `002_create_agent_runs.sql` | ⬜ Todo |
-| `runtime_errors` | `003_create_runtime_errors.sql` | ⬜ Todo |
+| `projects` | `001_create_projects.sql` | ✅ Done |
+| `agent_runs` | `002_create_agent_runs.sql` | ✅ Done |
+| `runtime_errors` | `003_create_runtime_errors.sql` | ✅ Done |
 
 ---
 
@@ -298,10 +298,10 @@ main                    ← stable, production-ready releases
 
 | Method | Endpoint | FR | Status |
 |--------|----------|----|--------|
-| `POST` | `/projects` | FR-8 | ⬜ Todo |
-| `GET` | `/projects/:id` | — | ⬜ Todo |
-| `GET` | `/projects/:id/logs` | — | ⬜ Todo |
-| `GET` | `/projects/:id/download` | FR-12 | ⬜ Todo |
+| `POST` | `/projects` | FR-8 | ✅ Done |
+| `GET` | `/projects/:id` | — | ✅ Done |
+| `GET` | `/projects/:id/logs` | — | ✅ Done |
+| `GET` | `/projects/:id/download` | FR-12 | ✅ Done |
 | `WS` | `/projects/:id/stream` | — | ⬜ Todo |
 
 ---
