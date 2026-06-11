@@ -8,12 +8,16 @@ import { generateAudio } from '@vibestudio/agent-audio';
 import { assembleProject, runInstall, runBuild, startDevServer, uploadToCloud } from '@vibestudio/build-system';
 import { runVerification } from '@vibestudio/runtime-verifier';
 import { DebuggerAgent } from '@vibestudio/agent-debugger';
+import { AIRouter } from '@vibestudio/shared/src/ai/router.js';
 import path from 'path';
 
 export const orchestratorWorker = new Worker(
   'projects',
   async (job: Job) => {
-    const { projectId, prompt } = job.data;
+    const { projectId, prompt, aiProvider, aiKey } = job.data;
+    
+    // Instantiate the AI router using the provided key
+    const aiRouter = new AIRouter(aiKey);
     
     const log = async (level: string, message: string) => {
       await query(
@@ -44,10 +48,10 @@ export const orchestratorWorker = new Worker(
         // or for this automated worker we just force generation.
         const session = createClarificationSession(projectId, prompt);
         session.answers = { difficulty: 'Medium', camera: 'Side Scroller', artStyle: 'Pixel Art', genre: 'Arcade' }; // Mock answers for MVP
-        blueprint = generateBlueprint(session);
+        blueprint = await generateBlueprint(session, aiRouter, aiProvider);
       } else {
         const session = createClarificationSession(projectId, prompt);
-        blueprint = generateBlueprint(session);
+        blueprint = await generateBlueprint(session, aiRouter, aiProvider);
       }
 
       await query(
@@ -58,15 +62,15 @@ export const orchestratorWorker = new Worker(
       // Phase 1E: Mechanics Agent
       await updatePhase('generation', 35);
       await log('info', 'Running Mechanics Agent');
-      const mechanics = generateMechanics(blueprint);
+      const mechanics = await generateMechanics(blueprint, aiRouter, aiProvider);
 
       // Phase 2: Asset Agent
       await log('info', 'Running Asset Agent');
-      const assets = generateAssets(blueprint);
+      const assets = await generateAssets(blueprint, aiRouter, aiProvider);
 
       // Phase 3: Audio Agent
       await log('info', 'Running Audio Agent');
-      const audio = generateAudio(blueprint);
+      const audio = await generateAudio(blueprint, aiRouter, aiProvider);
 
       // Phase 1F: Build System (Assembly)
       await updatePhase('assembly', 60);

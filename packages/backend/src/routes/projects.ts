@@ -120,7 +120,9 @@ export async function projectRoutes(app: FastifyInstance) {
     }
 
     const logsRes = await query('SELECT output FROM agent_runs WHERE project_id = $1 ORDER BY created_at ASC', [id]);
-    const logs = logsRes.rows.map(row => JSON.parse(row.output));
+    const logs = logsRes.rows.map(row => 
+      typeof row.output === 'string' ? JSON.parse(row.output) : row.output
+    );
 
     return reply.send({
       projectId: id,

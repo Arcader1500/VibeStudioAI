@@ -9,6 +9,7 @@
  */
 
 import type { ProjectBlueprint } from '../../director/src/schema.js'
+import { AIRouter } from '@vibestudio/shared/src/ai/router.js';
 
 export interface GeneratedFile {
   path: string      // relative to project src/game/
@@ -24,7 +25,42 @@ export interface MechanicsOutput {
 // Main entry
 // ---------------------------------------------------------------------------
 
-export function generateMechanics(blueprint: ProjectBlueprint): MechanicsOutput {
+export async function generateMechanics(
+  blueprint: ProjectBlueprint,
+  aiRouter?: AIRouter,
+  aiProvider?: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek'
+): Promise<MechanicsOutput> {
+  if (aiRouter) {
+    const systemPrompt = `You are the VibeStudio AI Mechanics Agent.
+Generate complete Phaser 3 code for a 2D browser game based on the provided ProjectBlueprint.
+You must return a raw JSON object with this EXACT structure (No Markdown, No Backticks):
+{
+  "files": [
+    { "path": "game.js", "content": "..." },
+    { "path": "scenes/BootScene.js", "content": "..." },
+    { "path": "scenes/PreloadScene.js", "content": "..." },
+    { "path": "scenes/MenuScene.js", "content": "..." },
+    { "path": "scenes/GameScene.js", "content": "..." },
+    { "path": "scenes/GameOverScene.js", "content": "..." },
+    { "path": "entities/Player.js", "content": "..." },
+    { "path": "entities/Enemy.js", "content": "..." },
+    { "path": "entities/UI.js", "content": "..." }
+  ],
+  "dependencies": { "phaser": "^3.80.1" }
+}
+
+Ensure the code is complete, uses ES module imports, handles input, collisions, wave management, scoring, and UI correctly based on the blueprint.
+`;
+    try {
+      const response = await aiRouter.generate(`${systemPrompt}\n\nProjectBlueprint: ${JSON.stringify(blueprint)}`, { jsonMode: true, model: aiProvider, maxTokens: 8000 });
+      const rawData = JSON.parse(response.content);
+      if (rawData.files && rawData.dependencies) {
+        return rawData as MechanicsOutput;
+      }
+    } catch (e) {
+      console.warn('AI Mechanics generation failed. Falling back to deterministic generation.', e);
+    }
+  }
   const { gameplay, controls } = blueprint
   const { genre, camera, difficulty } = gameplay
 

@@ -14,6 +14,7 @@
  */
 
 import type { ProjectBlueprint } from '../../director/src/schema.js'
+import { AIRouter } from '@vibestudio/shared/src/ai/router.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -480,8 +481,39 @@ export function stopAmbient() {
 // Main entry
 // ---------------------------------------------------------------------------
 
-export function generateAudio(blueprint: ProjectBlueprint): AudioAgentOutput {
-  const config    = buildAudioConfig(blueprint)
+export async function generateAudio(
+  blueprint: ProjectBlueprint,
+  aiRouter?: AIRouter,
+  aiProvider?: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek'
+): Promise<AudioAgentOutput> {
+  let config = buildAudioConfig(blueprint)
+
+  if (aiRouter) {
+    const systemPrompt = `You are the VibeStudio AI Audio Agent.
+Determine the audio configuration based on the ProjectBlueprint.
+Return a raw JSON object with this EXACT structure (No Markdown):
+{
+  "style": "chiptune" | "ambient" | "orchestral" | "synthwave",
+  "tempo": number (BPM),
+  "key": number (root frequency in Hz),
+  "scale": [number, number, ...] (semitone intervals),
+  "hasMusic": boolean,
+  "hasSfx": boolean,
+  "hasAmbient": boolean
+}
+Ensure it strictly conforms to this schema.`;
+
+    try {
+      const response = await aiRouter.generate(`${systemPrompt}\n\nProjectBlueprint: ${JSON.stringify(blueprint)}`, { jsonMode: true, model: aiProvider });
+      const rawData = JSON.parse(response.content);
+      if (rawData.style && rawData.scale) {
+        config = rawData as AudioConfig;
+      }
+    } catch (e) {
+      console.warn('AI Audio config generation failed. Falling back to deterministic config.', e);
+    }
+  }
+
   const audioCode = generateAudioCode(config)
   return { config, audioCode }
 }

@@ -5,13 +5,19 @@ import { Gamepad2, ArrowRight, Loader2 } from 'lucide-react'
 
 // Basic fetch wrapper for /projects
 async function fetchPastProjects() {
-  const token = localStorage.getItem('VIBESTUDIO_API_KEY') || ''
-  const res = await fetch(import.meta.env.VITE_API_URL + '/projects', {
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  if (!res.ok) return []
-  const data = await res.json()
-  return data.projects || []
+  try {
+    const token = localStorage.getItem('VIBESTUDIO_API_KEY') || ''
+    const baseUrl = import.meta.env.VITE_API_URL || ''
+    const res = await fetch(`${baseUrl}/projects`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.projects || []
+  } catch (err) {
+    console.error('Failed to fetch past projects:', err)
+    return []
+  }
 }
 
 export function PastGames() {

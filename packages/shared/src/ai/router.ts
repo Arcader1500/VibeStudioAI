@@ -40,9 +40,9 @@ const FALLBACK_CHAIN = ['deepseek', 'gemini', 'claude', 'gpt'];
 export class AIRouter {
   private apiKey: string;
 
-  constructor() {
+  constructor(apiKeyOverride?: string) {
     // In a real production app, this would be fetched from a secure KMS or encrypted env
-    const key = process.env.OPENROUTER_API_KEY;
+    const key = apiKeyOverride || process.env.OPENROUTER_API_KEY;
     if (!key) {
       console.warn('OPENROUTER_API_KEY is missing. AI generations will fail.');
     }

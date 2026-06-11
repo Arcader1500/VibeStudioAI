@@ -12,15 +12,34 @@ importers:
         specifier: ^5.4.0
         version: 5.9.3
 
-  packages/agents/asset: {}
+  packages/agents/asset:
+    dependencies:
+      '@vibestudio/shared':
+        specifier: workspace:*
+        version: link:../../shared
 
-  packages/agents/audio: {}
+  packages/agents/audio:
+    dependencies:
+      '@vibestudio/shared':
+        specifier: workspace:*
+        version: link:../../shared
 
   packages/agents/debugger: {}
 
-  packages/agents/director: {}
+  packages/agents/director:
+    dependencies:
+      '@vibestudio/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
 
-  packages/agents/mechanics: {}
+  packages/agents/mechanics:
+    dependencies:
+      '@vibestudio/shared':
+        specifier: workspace:*
+        version: link:../../shared
 
   packages/backend:
     dependencies:

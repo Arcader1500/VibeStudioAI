@@ -12,6 +12,7 @@
  */
 
 import type { ProjectBlueprint } from '../../director/src/schema.js'
+import { AIRouter } from '@vibestudio/shared/src/ai/router.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -567,12 +568,39 @@ ${allSprites.map(s => `  ${s.key}: '${s.key}',`).join('\n')}
 // Main entry point (FR-6)
 // ---------------------------------------------------------------------------
 
-export function generateAssets(blueprint: ProjectBlueprint): AssetAgentOutput {
-  const registry: AssetRegistry = {
+export async function generateAssets(
+  blueprint: ProjectBlueprint,
+  aiRouter?: AIRouter,
+  aiProvider?: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek'
+): Promise<AssetAgentOutput> {
+  let registry: AssetRegistry = {
     sprites: buildSpriteMatrices(blueprint),
     tiles:   buildTileDefinitions(blueprint),
     icons:   buildIconDefinitions(),
     effects: buildEffectDefinitions(blueprint),
+  }
+
+  if (aiRouter) {
+    const systemPrompt = `You are the VibeStudio AI Asset Agent.
+Modify the visual asset registry based on the ProjectBlueprint.
+Return a raw JSON object with this EXACT structure (No Markdown, No Backticks):
+{
+  "sprites": [ { "key": string, "width": number, "height": number, "scale": number, "matrix": [string, string], "palette": { "char": "#hex" } } ],
+  "tiles": [ ... ],
+  "icons": [ ... ],
+  "effects": [ ... ]
+}
+Make sure all arrays are populated correctly based on the style requested.`;
+
+    try {
+      const response = await aiRouter.generate(`${systemPrompt}\n\nProjectBlueprint: ${JSON.stringify(blueprint)}`, { jsonMode: true, model: aiProvider, maxTokens: 8000 });
+      const rawData = JSON.parse(response.content);
+      if (rawData.sprites && rawData.tiles && rawData.icons && rawData.effects) {
+        registry = rawData as AssetRegistry;
+      }
+    } catch (e) {
+      console.warn('AI Asset generation failed. Falling back to deterministic config.', e);
+    }
   }
 
   const assetsCode = generateAssetsCode(registry)

@@ -9,5 +9,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vibestudio/shared": "workspace:*"
   }
 }

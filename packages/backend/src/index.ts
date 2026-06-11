@@ -37,7 +37,7 @@ async function bootstrap() {
       await pool.query('SELECT 1');
       dbStatus = 'up';
     } catch (err) {
-      server.log.error('DB health check failed', err);
+      server.log.error(err, 'DB health check failed');
     }
     return { status: 'ok', version: '0.1.0', db: dbStatus };
   });

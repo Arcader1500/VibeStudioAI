@@ -15,6 +15,7 @@ import {
   type ClarificationQuestion,
   type ClarificationSession,
 } from './schema.js';
+import { AIRouter } from '@vibestudio/shared/src/ai/router.js';
 
 // ---------------------------------------------------------------------------
 // Ambiguity detection (FR-2)
@@ -121,10 +122,67 @@ export function generateClarificationQuestions(
  * In production, this will be backed by an LLM call via Antigravity SDK.
  * This stub provides deterministic defaults for MVP testing.
  */
-export function generateBlueprint(
+export async function generateBlueprint(
   session: ClarificationSession,
-): ProjectBlueprint {
+  aiRouter?: AIRouter,
+  aiProvider?: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek'
+): Promise<ProjectBlueprint> {
   const { originalPrompt, answers } = session;
+
+  if (aiRouter) {
+    const systemPrompt = `You are the VibeStudio AI Director. Your task is to generate a structured JSON blueprint for a 2D Phaser game.
+The user has provided a base prompt and some clarification answers.
+You must return a raw JSON object that EXACTLY matches the following schema.
+Do NOT wrap the JSON in markdown or backticks.
+
+{
+  "title": "String (Short, catchy game title)",
+  "genre": "String (e.g. 'arcade', 'survival', 'platformer', 'rpg', 'tower_defense', 'puzzle')",
+  "artStyle": "String (Must be one of: 'pixel', 'vector', 'hand_drawn', 'minimal')",
+  "gameplay": {
+    "genre": "String (same as above)",
+    "camera": "String (Must be one of: 'top_down', 'side_scroller', 'isometric', 'fixed')",
+    "difficulty": "String (Must be one of: 'easy', 'medium', 'hard')",
+    "winConditions": ["String", "String"],
+    "lossConditions": ["String", "String"],
+    "waveBased": true/false,
+    "playerLives": number
+  },
+  "audio": {
+    "hasBackgroundMusic": true/false,
+    "hasSoundEffects": true/false,
+    "hasAmbientSound": true/false,
+    "musicStyle": "String"
+  },
+  "controls": {
+    "keyboard": true/false,
+    "gamepad": true/false,
+    "touch": true/false,
+    "primaryControls": {
+      "move": "String (e.g. 'WASD')",
+      "action": "String (e.g. 'Space')",
+      "pause": "String (e.g. 'Escape')"
+    }
+  },
+  "deployment": {
+    "exportFormats": ["zip"]
+  }
+}
+
+Use sensible defaults for anything not explicitly specified.`;
+
+    const userPrompt = `Prompt: ${originalPrompt}
+Clarification Answers: ${JSON.stringify(answers)}`;
+
+    try {
+      const response = await aiRouter.generate(`${systemPrompt}\n\n${userPrompt}`, { jsonMode: true, model: aiProvider });
+      const rawData = JSON.parse(response.content);
+      return ProjectBlueprintSchema.parse(rawData);
+    } catch (e) {
+      console.warn('AI generation failed or returned invalid schema. Falling back to deterministic generation.', e);
+    }
+  }
+
   const lower = originalPrompt.toLowerCase();
 
   // --- genre ---
