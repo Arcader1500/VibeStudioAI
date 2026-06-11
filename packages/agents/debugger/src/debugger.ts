@@ -132,7 +132,7 @@ export class DebuggerAgent {
     if (errorMsg.includes('texture') && errorMsg.includes('missing')) {
       // Missing texture key fallback
       patched = patched.replace(/this\.add\.sprite\(([^,]+),([^,]+),\s*'([^']+)'\)/g, 
-        'this.add.sprite($1, $2, this.textures.exists(\\'$3\\') ? \\'$3\\' : \\'__DEFAULT\\')');
+        "this.add.sprite($1, $2, this.textures.exists('$3') ? '$3' : '__DEFAULT__')");
       applied = patched !== content;
     }
 
