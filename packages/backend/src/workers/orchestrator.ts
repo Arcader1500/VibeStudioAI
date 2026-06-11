@@ -1,13 +1,13 @@
 import { Worker, Job } from 'bullmq';
 import { connection } from '../lib/queue.js';
 import { query } from '../lib/db.js';
-import { DirectorAgent } from '@vibestudio/agents-director';
-import { generateMechanics } from '@vibestudio/agents-mechanics';
-import { generateAssets } from '@vibestudio/agents-asset';
-import { generateAudio } from '@vibestudio/agents-audio';
+import { DirectorAgent } from '@vibestudio/agent-director';
+import { generateMechanics } from '@vibestudio/agent-mechanics';
+import { generateAssets } from '@vibestudio/agent-asset';
+import { generateAudio } from '@vibestudio/agent-audio';
 import { assembleProject, runInstall, runBuild, startDevServer } from '@vibestudio/build-system';
 import { runVerification } from '@vibestudio/runtime-verifier';
-import { DebuggerAgent } from '@vibestudio/agents-debugger';
+import { DebuggerAgent } from '@vibestudio/agent-debugger';
 import path from 'path';
 
 export const orchestratorWorker = new Worker(
