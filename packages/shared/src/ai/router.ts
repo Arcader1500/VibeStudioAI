@@ -25,13 +25,13 @@ export interface AIResponse {
 // ---------------------------------------------------------------------------
 
 const PROVIDER_MODELS = {
-  gemini: 'google/gemini-pro',           // Default primary
+  deepseek: 'deepseek/deepseek-v4-flash',// Default primary
+  gemini: 'google/gemini-pro',           // Reliable fallback
   claude: 'anthropic/claude-3-haiku',    // Fast fallback
   gpt: 'openai/gpt-4o-mini',             // Reliable fallback
-  deepseek: 'deepseek/deepseek-coder',   // Coding fallback
 };
 
-const FALLBACK_CHAIN = ['gemini', 'claude', 'gpt', 'deepseek'];
+const FALLBACK_CHAIN = ['deepseek', 'gemini', 'claude', 'gpt'];
 
 // ---------------------------------------------------------------------------
 // Main Router
@@ -54,7 +54,7 @@ export class AIRouter {
    * if the primary fails (e.g., rate limits, downtime).
    */
   public async generate(prompt: string, options: AIRoutingOptions = {}): Promise<AIResponse> {
-    const startModel = options.model && options.model !== 'auto' ? options.model : 'gemini';
+    const startModel = options.model && options.model !== 'auto' ? options.model : 'deepseek';
     const startIndex = FALLBACK_CHAIN.indexOf(startModel);
     
     // Try the preferred model and then cascade down the fallback chain

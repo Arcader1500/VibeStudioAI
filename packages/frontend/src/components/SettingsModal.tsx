@@ -38,10 +38,10 @@ export function SettingsModal() {
               className="bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-brand-purple transition-colors appearance-none"
             >
               <option value="auto">Auto (Smart Fallback Chain)</option>
+              <option value="deepseek">DeepSeek V4 Flash</option>
               <option value="gemini">Google Gemini Pro 1.5</option>
               <option value="claude">Anthropic Claude 3.5 Sonnet</option>
               <option value="gpt">OpenAI GPT-4o</option>
-              <option value="deepseek">DeepSeek Coder</option>
             </select>
           </div>
         </div>

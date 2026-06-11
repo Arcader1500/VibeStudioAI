@@ -109,7 +109,7 @@ const initialState: ProjectState = {
   downloadUrl: null,
   isLoading: false,
   error: null,
-  aiProvider: 'auto',
+  aiProvider: 'deepseek',
   openRouterKey: localStorage.getItem('VIBESTUDIO_API_KEY') || '',
   showSettings: false,
 }
