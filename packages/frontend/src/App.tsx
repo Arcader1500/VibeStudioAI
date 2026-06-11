@@ -10,6 +10,9 @@ import { BuildProgress }     from '@/components/BuildProgress'
 import { GamePreview }       from '@/components/GamePreview'
 import { ErrorBanner }       from '@/components/ErrorBanner'
 import { SettingsModal }     from '@/components/SettingsModal'
+import { LogsModal }         from '@/components/LogsModal'
+import { PastGames }         from '@/components/PastGames'
+import { usePollingLogs }    from '@/hooks/usePollingLogs'
 
 // Feature cards shown on the idle screen
 const FEATURES = [
@@ -22,7 +25,8 @@ const FEATURES = [
 ]
 
 export default function App() {
-  const { phase, clarificationQuestions, clarificationComplete, showSettings } = useProjectStore()
+  const { phase, clarificationQuestions, clarificationComplete, showSettings, view } = useProjectStore()
+  usePollingLogs()
 
   const isIdle        = phase === 'idle'
   const isBuilding    = !isIdle && phase !== 'completed' && phase !== 'failed'
@@ -37,17 +41,20 @@ export default function App() {
         {/* Error banner — always on top */}
         <ErrorBanner />
 
+        {/* Past Games View */}
+        {view === 'past_games' && <PastGames />}
+
         {/* Idle — prompt input */}
-        {isIdle && <PromptInput />}
+        {isIdle && view === 'home' && <PromptInput />}
 
         {/* Building — progress visualization */}
-        {isBuilding && <BuildProgress />}
+        {isBuilding && view === 'home' && <BuildProgress />}
 
         {/* Completed — game preview */}
-        {isComplete && <GamePreview />}
+        {isComplete && view === 'home' && <GamePreview />}
 
         {/* Idle — feature showcase grid */}
-        {isIdle && (
+        {isIdle && view === 'home' && (
           <section className="w-full max-w-3xl mt-4">
             <p className="label-xs text-center mb-6">How it works</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -84,6 +91,9 @@ export default function App() {
 
       {/* Settings Modal */}
       {showSettings && <SettingsModal />}
+
+      {/* Logs Modal */}
+      <LogsModal />
     </div>
   )
 }

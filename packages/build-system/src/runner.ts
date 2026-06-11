@@ -18,11 +18,11 @@ export interface BuildResult {
 // ---------------------------------------------------------------------------
 
 export function runInstall(projectDir: string): BuildResult {
-  return runCommand('pnpm install', projectDir)
+  return runCommand('npm install', projectDir)
 }
 
 export function runBuild(projectDir: string): BuildResult {
-  return runCommand('pnpm build', projectDir)
+  return runCommand('npm run build', projectDir)
 }
 
 // ---------------------------------------------------------------------------
@@ -42,7 +42,7 @@ export function startDevServer(
 ): DevServerHandle {
   const url = `http://localhost:${port}`
 
-  const child = spawn('pnpm', ['dev', '--port', String(port), '--host', 'false'], {
+  const child = spawn('npm', ['run', 'dev', '--', '--port', String(port)], {
     cwd: projectDir,
     shell: true,
     stdio: 'pipe',
@@ -53,6 +53,10 @@ export function startDevServer(
     if (text.includes('Local:') || text.includes('localhost')) {
       onReady?.(url)
     }
+  })
+
+  child.stderr?.on('data', (data: Buffer) => {
+    console.error('[DevServer Error]:', data.toString())
   })
 
   return {

@@ -63,6 +63,11 @@ export interface ProjectState {
   aiProvider: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek'
   openRouterKey: string
   showSettings: boolean
+
+  // UI View
+  view: 'home' | 'past_games'
+  pastProjects: any[]
+  showLogsModal: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -89,6 +94,11 @@ interface ProjectActions {
   setAiProvider: (provider: 'auto' | 'gemini' | 'claude' | 'gpt' | 'deepseek') => void
   setOpenRouterKey: (key: string) => void
   setShowSettings: (show: boolean) => void
+
+  // UI View
+  setView: (view: 'home' | 'past_games') => void
+  setPastProjects: (projects: any[]) => void
+  setShowLogsModal: (show: boolean) => void
 }
 
 // ---------------------------------------------------------------------------
@@ -112,6 +122,9 @@ const initialState: ProjectState = {
   aiProvider: 'deepseek',
   openRouterKey: localStorage.getItem('VIBESTUDIO_API_KEY') || '',
   showSettings: false,
+  view: 'home',
+  pastProjects: [],
+  showLogsModal: false,
 }
 
 // ---------------------------------------------------------------------------
@@ -171,6 +184,9 @@ export const useProjectStore = create<ProjectState & ProjectActions>()(
       },
       
       setShowSettings: (showSettings) => set({ showSettings }),
+      setView: (view) => set({ view }),
+      setPastProjects: (pastProjects) => set({ pastProjects }),
+      setShowLogsModal: (showLogsModal) => set({ showLogsModal }),
     }),
     { name: 'vibestudio-project' }
   )
