@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "VibeStudio AI — Director Agent (requirement gathering, clarification, blueprint generation)",
+  "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",

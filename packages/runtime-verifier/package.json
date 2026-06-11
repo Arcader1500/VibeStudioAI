@@ -2,9 +2,9 @@
   "name": "@vibestudio/runtime-verifier",
   "version": "0.1.0",
   "private": true,
-  "description": "VibeStudio AI — Playwright Runtime Verifier",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "description": "VibeStudio AI — Runtime Verifier (Playwright telemetry, screenshot, logs capture)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --ext ts",
