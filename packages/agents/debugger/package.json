@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "description": "VibeStudio AI — Debugger Agent (build/runtime error analysis, surgical patch generation)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
